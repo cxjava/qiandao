@@ -178,6 +178,7 @@ func init() {
 }
 
 func main() {
+	defer log.Flush()
 	readReq()
 	MyCron()
 	// smzdm()
