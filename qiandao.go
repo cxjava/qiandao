@@ -141,9 +141,10 @@ func smzdm() {
 }
 
 func kjl() {
+	fmt.Println("kujiale!")
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	time.Sleep(time.Duration(r.Intn(40)) * time.Minute)
-	time.Sleep(time.Duration(r.Intn(400)) * time.Second)
+	time.Sleep(time.Duration(r.Intn(18)) * time.Minute)
+	time.Sleep(time.Duration(r.Intn(100)) * time.Second)
 	content, err := dm["kujiale_main"].getContent()
 	if err != nil {
 		fmt.Println("kjl", err)
