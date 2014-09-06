@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	log "github.com/cihub/seelog"
 	"github.com/robfig/cron"
 )
 
@@ -47,8 +48,7 @@ func (d *Domain) DoResponse() (*http.Response, error) {
 	}
 	request, err := http.NewRequest(d.Method, u, body)
 	if err != nil {
-		fmt.Println(d.ReqURL, " http.NewRequest error:", err)
-		Error(d.ReqURL, " http.NewRequest error:", err)
+		log.Error(d.ReqURL, " http.NewRequest error:", err)
 		return nil, err
 	}
 	//add header
@@ -67,20 +67,20 @@ func ParseResponseBody(resp *http.Response) string {
 	case "gzip":
 		reader, err := gzip.NewReader(resp.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			return ""
 		}
 		defer reader.Close()
 		bodyByte, err := ioutil.ReadAll(reader)
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			return ""
 		}
 		body = bodyByte
 	default:
 		bodyByte, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Error(err)
 			return ""
 		}
 		body = bodyByte
@@ -92,16 +92,15 @@ func (d *Domain) getContent() (string, error) {
 	content := ""
 	resp, err := d.DoResponse()
 	if err != nil {
-		fmt.Println(d.ReqURL, " DoResponse error:", err)
-		Error(d.ReqURL, " DoResponse error:", err)
+		log.Error(d.ReqURL, " DoResponse error:", err)
 		return content, err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusOK {
 		return ParseResponseBody(resp), nil
 	}
-	fmt.Println(d.ReqURL, resp.StatusCode, resp.Header, resp.Cookies())
-	return content, fmt.Errorf("StatusCode is not 200", resp.StatusCode)
+	log.Error(d.ReqURL, resp.StatusCode, resp.Header, resp.Cookies())
+	return content, fmt.Errorf("StatusCode is not 200,", resp.StatusCode)
 }
 
 func smzdm() {
@@ -110,33 +109,33 @@ func smzdm() {
 	time.Sleep(time.Duration(r.Intn(400)) * time.Second)
 	content, err := dm["smzdm_home"].getContent()
 	if err != nil {
-		fmt.Println("smzdm", err)
+		log.Error("smzdm", err)
 		return
 	}
 	content, err = dm["smzdm_user_info"].getContent()
 	if err != nil {
-		fmt.Println("smzdm", err)
+		log.Error("smzdm", err)
 		return
 	}
 	content, err = dm["smzdm_login"].getContent()
 	if err != nil {
-		fmt.Println("smzdm", err)
+		log.Error("smzdm", err)
 		return
 	}
 	if !strings.Contains(content, `"error_code":0,`) {
-		fmt.Println("登录失败！", content)
+		log.Error("登录失败！", content)
 		return
 	}
-	fmt.Println("登录成功！", content)
+	log.Info("登录成功！", content)
 	content, err = dm["smzdm_qiandao"].getContent()
 	if err != nil {
-		fmt.Println("smzdm", err)
+		log.Error("smzdm", err)
 		return
 	}
 	if strings.Contains(content, `"error_code":0,`) {
-		fmt.Println("签到成功！", content)
+		log.Info("签到成功！", content)
 	} else {
-		fmt.Println("签到失败！", content)
+		log.Error("签到失败！", content)
 	}
 }
 
@@ -147,21 +146,21 @@ func kjl() {
 	time.Sleep(time.Duration(r.Intn(100)) * time.Second)
 	content, err := dm["kujiale_main"].getContent()
 	if err != nil {
-		fmt.Println("kjl", err)
+		log.Error("kjl", err)
 		return
 	}
 	content, err = dm["kujiale_login"].getContent()
 	if err != nil {
-		fmt.Println("kjl", err)
+		log.Error("kjl", err)
 		return
 	}
-	fmt.Println("登录成功！", content)
+	log.Info("登录成功！", content)
 	content, err = dm["kujiale_qiandao"].getContent()
 	if err != nil {
-		fmt.Println("kjl", err)
+		log.Error("kjl", err)
 		return
 	}
-	fmt.Println("签到成功！", content)
+	log.Info("签到成功！", content)
 }
 
 func MyCron() {
@@ -175,7 +174,6 @@ func MyCron() {
 func init() {
 	flag.Parse()
 	ReadConfig()
-	SetLogInfo()
 	InitProxy()
 }
 
@@ -184,24 +182,18 @@ func main() {
 	MyCron()
 	// smzdm()
 	// kjl()
-	Info("Listen port 8000.")
+	log.Info("Listen port 8000.")
 	http.ListenAndServe(":8000", nil)
 }
 
 func readReq() {
 	file, err := ioutil.ReadFile("./req.json")
 	if err != nil {
-		fmt.Printf("File error: %v\n", err)
+		log.Error("File error: %v\n", err)
 	}
 
 	err = json.Unmarshal(file, &dm)
 	if err != nil {
-		fmt.Printf("File error: %v\n", err)
+		log.Error("File error: %v\n", err)
 	}
-}
-func SetLogInfo() {
-	// debug 1, info 2
-	SetLevel(2)
-	SetLogger("console", "")
-	SetLogger("file", `{"filename":"log.log","daily":false}`)
 }
