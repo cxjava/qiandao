@@ -123,24 +123,24 @@ func smzdm() {
 		return
 	}
 	if !strings.Contains(content, `"error_code":0,`) {
-		log.Error("登录失败！", content)
+		log.Error("login failed！", content)
 		return
 	}
-	log.Info("登录成功！", content)
+	log.Info("login success！", content)
 	content, err = dm["smzdm_qiandao"].getContent()
 	if err != nil {
 		log.Error("smzdm", err)
 		return
 	}
 	if strings.Contains(content, `"error_code":0,`) {
-		log.Info("签到成功！", content)
+		log.Info("qiandao success！", content)
 	} else {
-		log.Error("签到失败！", content)
+		log.Error("qiandao failed！", content)
 	}
 }
 
 func kjl() {
-	fmt.Println("kujiale!")
+	log.Info("kujiale!")
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	time.Sleep(time.Duration(r.Intn(18)) * time.Minute)
 	time.Sleep(time.Duration(r.Intn(100)) * time.Second)
@@ -154,13 +154,13 @@ func kjl() {
 		log.Error("kjl", err)
 		return
 	}
-	log.Info("登录成功！", content)
+	log.Info("login success！", content)
 	content, err = dm["kujiale_qiandao"].getContent()
 	if err != nil {
 		log.Error("kjl", err)
 		return
 	}
-	log.Info("签到成功！", content)
+	log.Info("qiandao success！", content)
 }
 
 func MyCron() {
