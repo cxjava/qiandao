@@ -179,6 +179,12 @@ func init() {
 
 func main() {
 	defer log.Flush()
+	defer func() {
+		if err := recover(); err != nil {
+			log.Critical(err)
+			log.Critical(string(debug.Stack()))
+		}
+	}()
 	readReq()
 	MyCron()
 	// smzdm()

@@ -1,6 +1,6 @@
 <!-- https://github.com/cihub/seelog/wiki/Log-levels -->
 <!--"trace","debug","info","warn","error","critical",-->
-<seelog type="asynctimer" asyncinterval="5000000" minlevel="debug" maxlevel="error">
+<seelog type="asynctimer" asyncinterval="5000000" minlevel="debug" maxlevel="critical">
     <exceptions>
         <exception filepattern="perfcriticalfile.go" minlevel="critical" />
     </exceptions>
