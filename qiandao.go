@@ -154,13 +154,13 @@ func kjl() {
 		log.Error("kjl", err)
 		return
 	}
-	log.Info("login success！", content)
+	log.Debug("login success！", content)
 	content, err = dm["kujiale_qiandao"].getContent()
 	if err != nil {
 		log.Error("kjl", err)
 		return
 	}
-	log.Info("qiandao success！", content)
+	log.Info("kjl qiandao success！", content)
 }
 
 func MyCron() {

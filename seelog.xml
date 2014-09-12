@@ -2,7 +2,7 @@
 <!--"trace","debug","info","warn","error","critical",-->
 <seelog type="asynctimer" asyncinterval="5000000" minlevel="debug" maxlevel="critical">
     <exceptions>
-        <exception filepattern="perfcriticalfile.go" minlevel="critical" />
+        <exception funcpattern="main.kjl" minlevel="info"/>
     </exceptions>
     <outputs formatid="format2">
         <console/>
