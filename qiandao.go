@@ -42,7 +42,12 @@ func (d *Domain) DoResponse() (*http.Response, error) {
 	if d.Method == "GET" {
 		body = nil
 		if len(d.Params) > 0 {
-			u = u + "?" + val.Encode()
+			if strings.Contains(u, `?`) {
+				u += `&`
+			} else {
+				u += `?`
+			}
+			u += val.Encode()
 		}
 	} else {
 		body = strings.NewReader(val.Encode())
