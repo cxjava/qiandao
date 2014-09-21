@@ -60,7 +60,7 @@ func (d *Domain) DoRequest() (*http.Response, error) {
 	//add header
 	if len(d.Headers) > 0 {
 		for k, v := range d.Headers {
-			request.Header.Add(k, v)
+			request.Header.Set(k, v)
 		}
 	}
 	return httpClient.Do(request)
