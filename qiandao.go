@@ -29,7 +29,7 @@ type Domain struct {
 	Headers map[string]string `json:"headers"`
 }
 
-func (d *Domain) DoResponse() (*http.Response, error) {
+func (d *Domain) DoRequest() (*http.Response, error) {
 	//add params
 	val := url.Values{}
 	if len(d.Params) > 0 {
@@ -96,9 +96,9 @@ func ParseResponseBody(resp *http.Response) string {
 
 func (d *Domain) getContent() (string, error) {
 	content := ""
-	resp, err := d.DoResponse()
+	resp, err := d.DoRequest()
 	if err != nil {
-		log.Error(d.ReqURL, " DoResponse error:", err)
+		log.Error(d.ReqURL, " DoRequest error:", err)
 		return content, err
 	}
 	defer resp.Body.Close()
@@ -193,8 +193,6 @@ func main() {
 	}()
 	readReq()
 	MyCron()
-	// smzdm()
-	// kjl()
 	log.Info("Listen port 8000.")
 	http.ListenAndServe(":8000", nil)
 }
