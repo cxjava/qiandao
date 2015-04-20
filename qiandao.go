@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 	"runtime/debug"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	log "github.com/cihub/seelog"
 	"github.com/robfig/cron"
@@ -27,6 +27,7 @@ type Domain struct {
 	Method  string            `json:"method"`
 	Params  map[string]string `json:"params"`
 	Headers map[string]string `json:"headers"`
+	Cookies map[string]string `json:"cookies"`
 }
 
 func (d *Domain) DoRequest() (*http.Response, error) {
@@ -63,6 +64,18 @@ func (d *Domain) DoRequest() (*http.Response, error) {
 			request.Header.Set(k, v)
 		}
 	}
+	if len(d.Cookies) > 0 {
+		for k, v := range d.Cookies {
+			cookie := &http.Cookie{
+				Name:     k,
+				Value:    v,
+				Expires:  time.Now().Add(356 * 24 * time.Hour),
+				HttpOnly: true,
+			}
+			request.AddCookie(cookie)
+		}
+	}
+
 	return httpClient.Do(request)
 }
 
@@ -104,8 +117,10 @@ func (d *Domain) getContent() (string, error) {
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusOK {
 		return ParseResponseBody(resp), nil
+	} else if resp.StatusCode == 521 {
+		return ParseResponseBody(resp), nil
 	}
-	log.Error(d.ReqURL, resp.StatusCode, resp.Header, resp.Cookies())
+	log.Error(d.ReqURL, resp.StatusCode, ParseResponseBody(resp))
 	return content, fmt.Errorf("StatusCode is not 200,", resp.StatusCode)
 }
 
@@ -118,11 +133,12 @@ func smzdm() {
 		log.Error("smzdm", err)
 		return
 	}
-	content, err = dm["smzdm_user_info"].getContent()
-	if err != nil {
-		log.Error("smzdm", err)
-		return
-	}
+	cookieTemp := SubString(content, `[];c.push("`, `");c=c.join("")`)
+	cookieTemp = strings.Replace(cookieTemp, `");c.push("`, "", -1)
+	dm["smzdm_user_info"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+	dm["smzdm_login"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+	dm["smzdm_qiandao"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+
 	content, err = dm["smzdm_login"].getContent()
 	if err != nil {
 		log.Error("smzdm", err)
@@ -133,6 +149,14 @@ func smzdm() {
 		return
 	}
 	log.Info("login success！", content)
+
+	content, err = dm["smzdm_user_info"].getContent()
+	if err != nil {
+		log.Error("smzdm", err)
+		return
+	}
+	log.Info("user_info:", content)
+
 	content, err = dm["smzdm_qiandao"].getContent()
 	if err != nil {
 		log.Error("smzdm", err)
@@ -173,7 +197,7 @@ func MyCron() {
 	c := cron.New()
 	//9点1分11秒
 	c.AddFunc(Conf.SmzdmCron, func() { go smzdm() })
-	c.AddFunc(Conf.KjlCron, func() { go kjl() })
+	// c.AddFunc(Conf.KjlCron, func() { go kjl() })
 	c.Start()
 }
 
@@ -191,6 +215,7 @@ func main() {
 			log.Critical(string(debug.Stack()))
 		}
 	}()
+	log.Info("Start!!")
 	readReq()
 	MyCron()
 	log.Info("Listen port 8000.")
@@ -207,4 +232,34 @@ func readReq() {
 	if err != nil {
 		log.Error("File error: %v\n", err)
 	}
+}
+
+func SubString(str, begin, end string) (substr string) {
+	// 将字符串的转换成[]rune
+	rs := []rune(str)
+	lth := len(rs)
+	//开始位置获取
+	beginIndex := UnicodeIndex(str, begin) + len([]rune(begin))
+	if beginIndex < 0 {
+		beginIndex = 0
+	}
+	if beginIndex >= lth {
+		beginIndex = lth
+	}
+	// 结束位置获取
+	endIndex := beginIndex + UnicodeIndex(string(rs[beginIndex:]), end)
+	if endIndex < 0 {
+		endIndex = 0
+	}
+	if endIndex >= lth {
+		endIndex = lth
+	}
+	// 返回子串
+	return string(rs[beginIndex:endIndex])
+}
+
+func UnicodeIndex(str, substr string) int {
+	// 子串在字符串的字节位置
+	result := strings.Index(str, substr)
+	return utf8.RuneCountInString(str[:result])
 }

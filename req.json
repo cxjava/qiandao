@@ -1,14 +1,15 @@
 {
 	"smzdm_home": {
-		"url": "http://www.smzdm.com/",
+		"url": "http://www.smzdm.com",
 		"method": "GET",
+		"cookies": {},
 		"params": {},
 		"headers": {
 			"Host": "www.smzdm.com",
-			"Proxy-Connection": "keep-alive",
 			"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.24 Safari/537.36",
+			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
 			"DNT": "1",
+			"Referer": "http://www.smzdm.com/",
 			"Accept-Encoding": "gzip,deflate,sdch",
 			"Accept-Language": "en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4"
 		}
@@ -16,6 +17,7 @@
 	"smzdm_user_info": {
 		"url": "http://www.smzdm.com/user/info/jsonp_get_current",
 		"method": "GET",
+		"cookies": {},
 		"params": {
 			"callback": "jQuery1110013156128185801208_1409528971042",
 			"pid": "",
@@ -28,7 +30,7 @@
 			"Cache-Control": "max-age=0",
 			"Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01",
 			"X-Requested-With": "XMLHttpRequest",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.24 Safari/537.36",
+			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
 			"DNT": "1",
 			"Referer": "http://www.smzdm.com/",
 			"Accept-Encoding": "gzip,deflate,sdch",
@@ -38,6 +40,7 @@
 	"smzdm_login": {
 		"url": "http://www.smzdm.com/user/login/jsonp_check",
 		"method": "GET",
+		"cookies": {},
 		"params": {
 			"callback": "jQuery111009446892843116075_1409529078303",
 			"user_login": "admin@sina.com",
@@ -53,7 +56,7 @@
 			"Proxy-Connection": "keep-alive",
 			"Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01",
 			"X-Requested-With": "XMLHttpRequest",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.24 Safari/537.36",
+			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
 			"DNT": "1",
 			"Referer": "http://www.smzdm.com/",
 			"Accept-Encoding": "gzip,deflate,sdch",
@@ -61,18 +64,16 @@
 		}
 	},
 	"smzdm_qiandao": {
-		"url": "http://www.smzdm.com/user/qiandao/jsonp_checkin",
+		"url": "http://www.smzdm.com/qiandao",
 		"method": "GET",
-		"params": {
-			"callback": "jQuery111006637911889702082_1405123759872",
-			"_": "1409529078305"
-		},
+		"cookies": {},
+		"params": {},
 		"headers": {
 			"Host": "www.smzdm.com",
 			"Proxy-Connection": "keep-alive",
 			"Accept": "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01",
 			"X-Requested-With": "XMLHttpRequest",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.24 Safari/537.36",
+			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36",
 			"DNT": "1",
 			"Referer": "http://www.smzdm.com/",
 			"Accept-Encoding": "gzip,deflate,sdch",
@@ -82,6 +83,7 @@
 	"kujiale_main": {
 		"url": "http://www.kujiale.com",
 		"method": "GET",
+		"cookies": {},
 		"params": {},
 		"headers": {
 			"Host": "www.kujiale.com",
@@ -98,6 +100,7 @@
 	"kujiale_login": {
 		"url": "http://www.kujiale.com/api/login",
 		"method": "POST",
+		"cookies": {},
 		"params": {
 			"email": "admin@sina.com",
 			"password": "admin"
@@ -120,6 +123,7 @@
 	"kujiale_qiandao": {
 		"url": "http://www.kujiale.com/api/sign",
 		"method": "POST",
+		"cookies": {},
 		"params": {},
 		"headers": {
 			"Host": "www.kujiale.com",
