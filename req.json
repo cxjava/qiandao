@@ -64,10 +64,13 @@
 		}
 	},
 	"smzdm_qiandao": {
-		"url": "http://www.smzdm.com/qiandao",
+		"url": "http://www.smzdm.com/user/qiandao/jsonp_checkin",
 		"method": "GET",
 		"cookies": {},
-		"params": {},
+		"params": {
+		"callback": "jQuery111009160841426346451_1429578314125",
+			"_": "1429578314127"
+			},
 		"headers": {
 			"Host": "www.smzdm.com",
 			"Proxy-Connection": "keep-alive",
