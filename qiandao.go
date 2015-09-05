@@ -164,36 +164,9 @@ func smzdm() {
 		log.Error("smzdm", err)
 		return
 	}
-	if strings.Contains(content, `"error_code":0,`) {
-		log.Info("qiandao success！", content)
-	} else {
-		log.Error("qiandao failed！", content)
-	}
+
 }
 
-func kjl() {
-	log.Info("kujiale!")
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	time.Sleep(time.Duration(r.Intn(18)) * time.Minute)
-	time.Sleep(time.Duration(r.Intn(100)) * time.Second)
-	content, err := dm["kujiale_main"].getContent()
-	if err != nil {
-		log.Error("kjl", err)
-		return
-	}
-	content, err = dm["kujiale_login"].getContent()
-	if err != nil {
-		log.Error("kjl", err)
-		return
-	}
-	log.Debug("login success！", content)
-	content, err = dm["kujiale_qiandao"].getContent()
-	if err != nil {
-		log.Error("kjl", err)
-		return
-	}
-	log.Info("kjl qiandao success！", content)
-}
 
 func MyCron() {
 	c := cron.New()
