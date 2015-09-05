@@ -134,12 +134,13 @@ func smzdm() {
 		log.Error("smzdm", err)
 		return
 	}
-	cookieTemp := SubString(content, `[];c.push("`, `");c=c.join("")`)
-	cookieTemp = strings.Replace(cookieTemp, `");c.push("`, "", -1)
-	dm["smzdm_user_info"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
-	dm["smzdm_login"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
-	dm["smzdm_qiandao"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
-
+	if strings.Contains(content, `[];c.push("`) {
+		cookieTemp := SubString(content, `[];c.push("`, `");c=c.join("")`)
+		cookieTemp = strings.Replace(cookieTemp, `");c.push("`, "", -1)
+		dm["smzdm_user_info"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+		dm["smzdm_login"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+		dm["smzdm_qiandao"].Headers["Cookie"] = `__jsl_clearance=` + cookieTemp
+	}
 	content, err = dm["smzdm_login"].getContent()
 	if err != nil {
 		log.Error("smzdm", err)
@@ -240,19 +241,26 @@ func SubString(str, begin, end string) (substr string) {
 	rs := []rune(str)
 	lth := len(rs)
 	//开始位置获取
-	beginIndex := UnicodeIndex(str, begin) + len([]rune(begin))
+	beginIndex := 0
+	if len(begin) > 0 && strings.Index(str, begin) > 0 {
+		beginIndex = UnicodeIndex(str, begin) + len([]rune(begin))
+	}
+
 	if beginIndex < 0 {
 		beginIndex = 0
 	}
-	if beginIndex >= lth {
+	if beginIndex > lth {
 		beginIndex = lth
 	}
 	// 结束位置获取
-	endIndex := beginIndex + UnicodeIndex(string(rs[beginIndex:]), end)
+	endIndex := lth
+	if len(end) > 0 && strings.Index(str, end) > 0 {
+		endIndex = beginIndex + UnicodeIndex(string(rs[beginIndex:]), end)
+	}
 	if endIndex < 0 {
 		endIndex = 0
 	}
-	if endIndex >= lth {
+	if endIndex > lth {
 		endIndex = lth
 	}
 	// 返回子串
